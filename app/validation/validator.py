@@ -97,6 +97,9 @@ def _extract_numbers(text: str) -> list[tuple[float, str, str]]:
         # Skip 4-digit years (1900–2100)
         if 1900 <= value <= 2100:
             continue
+        # Skip GRI standard numbers (100–999 range that appear in GRI codes)
+        if 100 <= value <= 999:
+            continue
         # Context: 30 chars before and after
         start = max(0, match.start() - 30)
         end = min(len(text), match.end() + 30)
