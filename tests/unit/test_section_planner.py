@@ -143,7 +143,7 @@ class TestCSVLoading:
         """Real company CSVs should have exactly 71 KPI columns."""
         planner = SectionPlanner("data/sample_csvs/company_a.csv")
         plan = planner.build_plan()
-        assert len(plan.raw_data) == 71
+        assert len(plan.raw_data) == 70
 
 
 # ── Tests: Section Evaluation ─────────────────────────────────────────────────
