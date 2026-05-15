@@ -98,8 +98,8 @@ aspire-sustainability/
 
 ## Deployment
 
-- **API:** Hosted on Render (FastAPI)
-- **Interface:** Hosted on Streamlit Cloud
+- **API:** https://aspire-sustainability.onrender.com
+- **Interface:** https://aspire-sustainability.streamlit.app
 
 ---
 
