@@ -11,10 +11,11 @@ from app.api.routes import router
 from app.core.config import settings
 
 app = FastAPI(
-    title="Sustainability Report Generator",
+    title="ASPIRE API",
     description=(
-        "Upload a company ESG CSV and receive a GRI/TCFD-aligned "
-        "sustainability report draft as a Word document."
+        "Backend for the Automated Sustainability Pipeline for Integrated "
+        "Reporting & Evaluation. Upload a company ESG CSV and receive a "
+        "GRI/TCFD-aligned sustainability report draft as a Word document."
     ),
     version="1.0.0",
 )
@@ -36,7 +37,7 @@ app.include_router(router, prefix="/api/v1")
 @app.get("/")
 def root():
     return {
-        "service": "Sustainability Report Generator API",
-        "version": "1.0.0",
-        "docs": "/docs",
+         "service": "ASPIRE API",
+         "version": "1.0.0",
+         "docs": "/docs",
     }
