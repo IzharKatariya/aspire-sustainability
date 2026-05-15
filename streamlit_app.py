@@ -40,7 +40,7 @@ st.divider()
 with st.sidebar:
     st.header("System Status")
     try:
-        resp = requests.get(HEALTH_ENDPOINT, timeout=5)
+        resp = requests.get(HEALTH_ENDPOINT, timeout=30)
         if resp.status_code == 200:
             st.success("API: Online ✓")
         else:
