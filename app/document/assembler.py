@@ -272,13 +272,16 @@ def _add_validation_appendix(doc: Document, validation_report) -> None:
         for sr in flagged_sections:
             doc.add_paragraph(f"{sr.section_title}:", ).runs[0].bold = True
             for f in sr.flagged:
+                raw_text = f.raw_text or "N/A"
+                closest_kpi = f.closest_source_kpi or "unknown"
+                closest_val = f.closest_source_value or "unknown"
+                deviation = f"{f.deviation_pct:.1f}" if f.deviation_pct is not None else "N/A"
                 doc.add_paragraph(
-                    f"  • Value '{f.raw_text}' could not be matched to source data. "
-                    f"Closest source: {f.closest_source_kpi} = {f.closest_source_value} "
-                    f"(deviation: {f.deviation_pct:.1f}%)",
+                    f"  • Value '{raw_text}' could not be matched to source data. "
+                    f"Closest source: {closest_kpi} = {closest_val} "
+                    f"(deviation: {deviation}%)",
                     style="List Bullet",
                 )
-
 
 
 def assemble_report(
