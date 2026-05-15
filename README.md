@@ -1,163 +1,108 @@
-# AI-Powered Sustainability Report Generator
+# ASPIRE: Automated Sustainability Pipeline for Integrated Reporting & Evaluation
 
-> A GenAI application that transforms raw company ESG data into structured,
-> GRI/TCFD-aligned sustainability report drafts using a multi-step LLM pipeline.
+## Strategic Overview
 
----
-
-## What It Does
-
-1. **Ingests** a company's ESG data as a CSV file
-2. **Plans** which GRI/TCFD report sections can be written based on available data
-3. **Generates** each section using an LLM with structured prompts
-4. **Validates** all numeric claims against the source CSV to prevent hallucination
-5. **Assembles** a professionally formatted Word (.docx) report for download
+ASPIRE is a production-grade AI orchestration pipeline designed to automate the transition from raw corporate ESG data to audit-ready sustainability disclosures. By integrating Generative AI with structured validation logic, the system generates reports aligned with GRI (Global Reporting Initiative) and TCFD (Task Force on Climate-related Financial Disclosures) frameworks — transforming a weeks-long manual consulting process into a multi-minute automated workflow.
 
 ---
 
-## Why This Matters
+## Core Functionality
 
-Sustainability reporting is a $1B+ consulting service. Companies like McKinsey,
-Deloitte, and PwC charge millions to produce GRI/TCFD-aligned reports manually.
-This project automates the first draft — reducing report generation time from
-weeks to minutes while maintaining framework compliance.
+- **Intelligent Section Planning:** Maps quantitative KPIs from CSV inputs to specific disclosure requirements (e.g., GRI 305 for Emissions).
+- **Multi-Step LLM Pipeline:** Orchestrates parallel calls to GPT-4o-mini or LLaMA-3 with section-specific system prompts and response constraints.
+- **Hallucination Prevention Layer:** Employs a numeric validation engine that cross-references LLM outputs against source data to ensure 100% factual integrity.
+- **Automated Assembly:** Generates professionally formatted `.docx` reports with structured headings, tables, and cover pages.
+
+---
+
+## Framework Coverage
+
+| Framework     | Standards / Pillars Covered                                              |
+|---------------|--------------------------------------------------------------------------|
+| GRI Standards | GRI 2 (General), 302 (Energy), 303 (Water), 305 (Emissions), 306 (Waste), 401/403/405 (Social/Diversity) |
+| TCFD          | Governance, Strategy, Risk Management, Metrics & Targets                 |
+
+---
+
+## Technical Architecture
+
+```
+CSV Input → Section Planner → LLM Orchestration → Validation Layer → .docx Assembly
+  (Raw)        (Logic)            (GenAI)           (Fact-Check)      (Formatting)
+```
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| Backend API | FastAPI + Python | Receives uploads, returns reports |
-| LLM Pipeline | Groq (LLaMA 3) / OpenAI (GPT-4o-mini) | Generates report sections |
-| Validation | pandas | Hallucination detection |
-| Document Assembly | python-docx | Builds the .docx output |
-| Frontend | Streamlit | Web interface |
-| Deployment | Render + Streamlit Cloud | Production hosting |
+| Layer | Technology |
+|---|---|
+| Orchestration | LangChain, Python 3.11 |
+| Models | Groq (LLaMA-3.3-70b), OpenAI (GPT-4o-mini) |
+| Backend | FastAPI (Async API design) |
+| Data / Validation | Pandas, NumPy, Regex |
+| Frontend | Streamlit |
 
 ---
 
-## Sustainability Standards Covered
+## Installation & Local Development
 
-### GRI (Global Reporting Initiative)
-- GRI 2 — General Disclosures (company overview, governance)
-- GRI 302 — Energy
-- GRI 303 — Water
-- GRI 305 — Emissions (Scope 1, 2, 3)
-- GRI 306 — Waste
-- GRI 401 — Employment
-- GRI 403 — Occupational Health & Safety
-- GRI 405 — Diversity & Equal Opportunity
+### 1. Clone the Repository
+```bash
+git clone https://github.com/IzharKatariya/aspire-sustainability.git
+cd aspire-sustainability
+```
 
-### TCFD (Task Force on Climate-related Financial Disclosures)
-- Governance
-- Strategy
-- Risk Management
-- Metrics & Targets
+### 2. Environment Setup
+```bash
+python -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 3. Configuration
+Create a `.env` file in the root directory:
+```
+OPENAI_API_KEY=your_key_here
+GROQ_API_KEY=your_key_here
+```
+
+### 4. Launch Services
+```bash
+# Backend
+uvicorn app.main:app --port 8000
+
+# Frontend
+streamlit run streamlit_app.py
+```
 
 ---
 
 ## Project Structure
-app/
-├── core/          → Configuration, GRI/TCFD schema, section planner
-├── llm/           → LLM pipeline, prompt templates
-├── validation/    → Hallucination detection, numeric cross-checks
-├── document/      → Word document assembly
-├── api/           → FastAPI endpoints
-└── utils/         → Shared helper functions
-data/
-└── sample_csvs/   → Sample data for 3 fictitious companies
-tests/
-├── unit/          → Individual module tests
-└── integration/   → End-to-end pipeline tests
 
----
-
-## Setup & Installation
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/izharkatariya/sustainability-report-generator.git
-cd sustainability-report-generator
 ```
-
-### 2. Create virtual environment
-```bash
-python -m venv venv
-venv\Scripts\activate        # Windows
-source venv/bin/activate     # Mac/Linux
-```
-
-### 3. Install dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Configure environment
-```bash
-cp .env.example .env
-# Open .env and add your API keys
+aspire-sustainability/
+├── app/
+│   ├── core/         # GRI/TCFD schemas and SectionPlanner logic
+│   ├── llm/          # Prompt engineering and LLMPipeline
+│   ├── validation/   # Numeric cross-check engine to eliminate hallucinations
+│   └── document/     # Word document assembly logic (python-docx)
+├── data/
+│   └── sample_csvs/  # Sample ESG data for company_a, company_b, company_c
+├── tests/            # 57/57 tests passing (unit + integration)
+├── streamlit_app.py
+└── requirements.txt
 ```
 
 ---
 
-## Running Locally
+## Deployment
 
-### Start the backend
-```bash
-uvicorn app.api.main:app --reload
-```
-
-### Start the frontend (separate terminal)
-```bash
-streamlit run app/frontend/main.py
-```
-
-Then open `http://localhost:8501` in your browser.
+- **API:** Hosted on Render (FastAPI)
+- **Interface:** Hosted on Streamlit Cloud
 
 ---
 
-## How It Works — Pipeline Architecture
+## About the Author
 
-CSV Upload
-↓
-Section Planner     → Reads CSV, maps KPIs to GRI sections, flags missing data
-↓
-LLM Pipeline        → One LLM call per section with structured system prompts
-↓
-Validation Layer    → Cross-checks all numbers in LLM output against CSV
-↓
-Document Assembly   → Builds formatted .docx with cover page, tables, headings
-↓
-Download Report
----
-
-## Hallucination Prevention
-
-A key feature of this project is the validation layer that prevents the LLM
-from inventing numbers. After each section is generated, the validator:
-
-1. Extracts all numeric values from the LLM output
-2. Cross-references each number against the source CSV
-3. Flags any value that differs by more than 5% from the source
-4. Regenerates or warns before including flagged sections in the final report
-
----
-
-## Build Log
-
-| Day | What Was Built |
-|-----|---------------|
-| Day 1 | Project scaffold, folder structure, git setup, dependencies |
-| Day 2 | GRI/TCFD schema design, report section template |
-| Day 3 | Sample CSVs for 3 fictitious companies |
-| Day 4 | Section planner module |
-| Day 5 | Unit tests for section planner |
-| ... | ... |
-
----
-
-## Author
-
-Built as a portfolio project targeting AI/ML Associate roles at top consulting
-firms' Sustainability Centers of Excellence.
+Izhar Katariya is an aspiring Data Scientist and AI/ML Engineer focused on building production-grade AI solutions for the sustainability sector. This project was developed as a flagship portfolio piece for Sustainability Centers of Excellence (CoE) at top-tier consulting firms.
