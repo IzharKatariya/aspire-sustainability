@@ -11,11 +11,9 @@ from dataclasses import dataclass
 from typing import Optional
 from app.core.schema import ReportSection
 
-# Numbers differing by less than this fraction are considered matching
 VALIDATION_TOLERANCE = 0.05   # 5 %
 
 
-# ── Result dataclasses ─────────────────────────────────────────────────────────
 
 @dataclass
 class FlaggedNumber:
@@ -75,18 +73,22 @@ class ValidationReport:
         return "\n".join(lines)
 
 
-# ── Core helpers ───────────────────────────────────────────────────────────────
 
 def _extract_numbers(text: str) -> list[tuple[float, str, str]]:
     """
     Return list of (float_value, raw_string, context_snippet) for every
     number found in text. Handles commas (1,200,000) and decimals.
     Skips single digits, small numbers, and 4-digit years.
+
+    FIX: comma-formatted numbers like '4,200' are now correctly parsed
+    and their raw_text preserved so the validator can match them.
     """
+    # Match comma-formatted numbers first, then plain decimals/integers
     pattern = re.compile(r'\b(\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+(?:\.\d+)?)\b')
     results = []
     for match in pattern.finditer(text):
         raw = match.group()
+        # FIX: strip commas before converting to float
         try:
             value = float(raw.replace(',', ''))
         except ValueError:
@@ -109,27 +111,77 @@ def _extract_numbers(text: str) -> list[tuple[float, str, str]]:
 
 
 def _build_source_pool(
-    readiness,  # SectionReadiness object
+    readiness,          # SectionReadiness object
+    section_id: str,    # FIX: used to apply section-aware KPI filtering
 ) -> dict[str, float]:
     """
     Extract numeric values from SectionReadiness.available_kpis.
-    Only includes KPIs whose names suggest a numeric measurement,
-    to avoid string fields with accidentally numeric-looking values.
+    Only includes KPIs whose names suggest a numeric measurement.
+
+    FIX: section-aware filtering — each section only validates against
+    its own KPIs, preventing cross-section false positives where a
+    number like '43' matches the wrong KPI from a different domain.
     """
     NUMERIC_HINTS = (
         "_mwh", "_tco2e", "_m3", "_usd", "_pct", "_rate",
         "_ratio", "_tonnes", "_hours", "_size",
-        "_employees", "_hires", "_incidents", "_cases",
+        "_total", "_female", "_male", "_hires", "_injuries",
+        "_incidents", "_cases", "_breaches", "_audits",
         "_intensity", "_offset", "_price",
-        "number_of", "total_", "avg_", "yoy_",
+        "number_of", "avg_", "yoy_", "employees_",
+        "board_members", "community_investment",
+        "supplier_audits", "suppliers_with",
+        "work_related", "fatalities", "ceo_pay",
+        "training_hours", "new_hires", "turnover",
     )
+
+    # FIX: section-specific KPI allowlists — only validate numbers that
+    # belong to this section's domain, avoiding ambiguous cross-matches
+    SECTION_KPI_FILTER: dict[str, set[str]] = {
+        "overview":          {"employees_total", "reporting_year"},
+        "governance":        {"board_members_total", "board_members_female",
+                              "independent_directors_pct", "ceo_pay_ratio",
+                              "anti_corruption_training_pct",
+                              "supplier_audits_conducted",
+                              "suppliers_with_code_of_conduct_pct"},
+        "climate_strategy":  {"scope1_emissions_tco2e", "scope2_emissions_tco2e",
+                              "scope3_emissions_tco2e", "renewable_energy_pct",
+                              "energy_consumption_mwh"},
+        "energy":            {"energy_consumption_mwh", "renewable_energy_pct"},
+        "emissions":         {"scope1_emissions_tco2e", "scope2_emissions_tco2e",
+                              "scope3_emissions_tco2e"},
+        "water":             {"water_withdrawal_m3", "water_recycled_pct"},
+        "waste":             {"waste_total_tonnes", "waste_recycled_pct",
+                              "waste_hazardous_tonnes"},
+        "workforce":         {"employees_total", "employees_female_pct",
+                              "employees_male_pct", "employee_turnover_pct",
+                              "new_hires", "training_hours_per_employee"},
+        "health_safety":     {"work_related_injuries", "fatalities",
+                              "training_hours_per_employee"},
+        "dei":               {"employees_female_pct", "employees_male_pct",
+                              "board_members_female"},
+        "community_ethics":  {"community_investment_usd",
+                              "suppliers_with_code_of_conduct_pct",
+                              "anti_corruption_training_pct",
+                              "data_breaches", "supplier_audits_conducted"},
+        "targets_outlook":   {"renewable_energy_pct", "scope1_emissions_tco2e",
+                              "scope2_emissions_tco2e", "scope3_emissions_tco2e"},
+    }
+
+    allowed_kpis = SECTION_KPI_FILTER.get(section_id)  # None = no filter
+
     pool: dict[str, float] = {}
     for kpi, raw in readiness.available_kpis.items():
         if raw is None:
             continue
+        # Apply section-aware filter if defined
+        if allowed_kpis is not None and kpi not in allowed_kpis:
+            continue
+        # Also require numeric hint in KPI name as a sanity check
         if not any(hint in kpi for hint in NUMERIC_HINTS):
             continue
         try:
+            # FIX: strip commas from source values too, for consistency
             val = float(str(raw).replace(',', ''))
             if not math.isnan(val):
                 pool[kpi] = val
@@ -176,16 +228,16 @@ def _is_matched(value: float, pool: dict[str, float]) -> bool:
     return False
 
 
-# ── Main validator ─────────────────────────────────────────────────────────────
 
 def validate_section(
     section: ReportSection,
-    readiness,  # SectionReadiness object
+    readiness,          # SectionReadiness object
     generated_text: str,
 ) -> SectionValidation:
     """Validate one section's generated text against its source data."""
 
-    source_pool = _build_source_pool(readiness)
+    # FIX: pass section_id into _build_source_pool for section-aware filtering
+    source_pool = _build_source_pool(readiness, section.section_id)
     extracted = _extract_numbers(generated_text)
     flagged: list[FlaggedNumber] = []
 
