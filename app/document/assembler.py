@@ -23,7 +23,6 @@ from app.core.report_template import STYLE, TITLE_PAGE, FOOTER, DOCUMENT_SECTION
 from app.core.config import settings
 
 
-# ── Colour helpers ─────────────────────────────────────────────────────────────
 
 def _rgb(hex_str: str) -> RGBColor:
     """Convert 6-char hex string to RGBColor."""
@@ -33,7 +32,6 @@ def _rgb(hex_str: str) -> RGBColor:
     return RGBColor(r, g, b)
 
 
-# ── Page margin helper ─────────────────────────────────────────────────────────
 
 def _set_margins(doc: Document) -> None:
     """Apply margins from STYLE to all sections of the document."""
@@ -44,7 +42,6 @@ def _set_margins(doc: Document) -> None:
         section.right_margin  = Cm(STYLE.margin_right)
 
 
-# ── Footer helper ──────────────────────────────────────────────────────────────
 
 def _add_footer(doc: Document, company_name: str) -> None:
     """Add a simple text footer to the first document section."""
@@ -60,7 +57,6 @@ def _add_footer(doc: Document, company_name: str) -> None:
     run.font.color.rgb = _rgb(FOOTER.font_color)
 
 
-# ── Title page ─────────────────────────────────────────────────────────────────
 
 def _add_title_page(
     doc: Document,
@@ -138,7 +134,6 @@ def _add_title_page(
     doc.add_page_break()
 
 
-# ── About page ─────────────────────────────────────────────────────────────────
 
 def _add_about_page(doc: Document, company_name: str, reporting_year: str) -> None:
     """Add a short 'About This Report' page."""
@@ -160,7 +155,6 @@ def _add_about_page(doc: Document, company_name: str, reporting_year: str) -> No
     doc.add_page_break()
 
 
-# ── Section pages ──────────────────────────────────────────────────────────────
 
 def _add_section(
     doc: Document,
@@ -199,10 +193,9 @@ def _add_section(
             p.runs[0].font.size = Pt(STYLE.body_size)
             p.runs[0].font.name = STYLE.body_font
 
-    doc.add_paragraph()  # breathing space between sections
+    doc.add_paragraph()  
 
 
-# ── Validation appendix ────────────────────────────────────────────────────────
 
 def _add_validation_appendix(doc: Document, validation_report) -> None:
     """Add a validation summary table as the final appendix."""
@@ -224,11 +217,9 @@ def _add_validation_appendix(doc: Document, validation_report) -> None:
 
     doc.add_paragraph()
 
-    # Summary table
     table = doc.add_table(rows=1, cols=4)
     table.style = "Table Grid"
 
-    # Header row
     hdr_cells = table.rows[0].cells
     headers = ["Section", "Numbers Checked", "Flags Raised", "Status"]
     for i, text in enumerate(headers):
@@ -237,7 +228,7 @@ def _add_validation_appendix(doc: Document, validation_report) -> None:
         run.bold = True
         run.font.size = Pt(STYLE.caption_size)
         run.font.color.rgb = _rgb("FFFFFF")
-        # Navy background
+
         tc = hdr_cells[i]._tc
         tcPr = tc.get_or_add_tcPr()
         shd = OxmlElement("w:shd")
@@ -246,7 +237,6 @@ def _add_validation_appendix(doc: Document, validation_report) -> None:
         shd.set(qn("w:val"), "clear")
         tcPr.append(shd)
 
-    # Data rows
     for sr in validation_report.section_results:
         row_cells = table.add_row().cells
         status = "PASS ✓" if sr.passed else "REVIEW ⚠"
@@ -265,7 +255,6 @@ def _add_validation_appendix(doc: Document, validation_report) -> None:
 
     doc.add_paragraph()
 
-    # Overall status
     overall_para = doc.add_paragraph(
         f"Overall validation status: "
         f"{'PASS — no flags raised.' if validation_report.overall_passed else f'REVIEW REQUIRED — {validation_report.total_flags} flag(s) raised across {len(validation_report.section_results)} sections.'}"
@@ -276,7 +265,6 @@ def _add_validation_appendix(doc: Document, validation_report) -> None:
         color = "007000" if validation_report.overall_passed else "C00000"
         overall_para.runs[0].font.color.rgb = _rgb(color)
 
-    # Detail flags if any
     flagged_sections = [sr for sr in validation_report.section_results if sr.flagged]
     if flagged_sections:
         doc.add_paragraph()
@@ -292,7 +280,6 @@ def _add_validation_appendix(doc: Document, validation_report) -> None:
                 )
 
 
-# ── Main assembler ─────────────────────────────────────────────────────────────
 
 def assemble_report(
     generated_report,       # GeneratedReport from pipeline.py
@@ -325,7 +312,7 @@ def assemble_report(
     _add_about_page(doc, company_name, reporting_year)
 
     # Add each section in template order
-    section_text_map = generated_report.sections  # dict: section_id -> text
+    section_text_map = generated_report.sections  
 
     for report_section in DOCUMENT_SECTION_ORDER:
         sid = report_section.section_id
@@ -341,7 +328,6 @@ def assemble_report(
             body_text=text,
         )
 
-    # Validation appendix
     _add_validation_appendix(doc, validation_report)
 
     doc.save(str(output_path))

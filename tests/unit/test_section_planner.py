@@ -115,21 +115,21 @@ class TestCSVLoading:
     """Tests that verify the CSV is loaded correctly."""
 
     def test_loads_real_company_csv(self):
-        """Planner should load company_a.csv without errors."""
-        planner = SectionPlanner("data/sample_csvs/company_a.csv")
+        """Planner should load verdant_industries_2023.csv without errors."""
+        planner = SectionPlanner("data/sample_csvs/verdant_industries_2023.csv")
         plan = planner.build_plan()
         assert plan is not None
         assert isinstance(plan, SectionPlan)
 
     def test_company_name_extracted_correctly(self):
         """Company name should be read from CSV into the plan."""
-        planner = SectionPlanner("data/sample_csvs/company_a.csv")
+        planner = SectionPlanner("data/sample_csvs/verdant_industries_2023.csv")
         plan = planner.build_plan()
         assert plan.company_name == "VerdantSteel Ltd"
 
     def test_reporting_year_extracted_correctly(self):
         """Reporting year should be extracted as a string."""
-        planner = SectionPlanner("data/sample_csvs/company_a.csv")
+        planner = SectionPlanner("data/sample_csvs/verdant_industries_2023.csv")
         plan = planner.build_plan()
         assert plan.reporting_year == "2023"
 
@@ -141,7 +141,7 @@ class TestCSVLoading:
 
     def test_raw_data_has_71_kpis(self):
         """Real company CSVs should have exactly 71 KPI columns."""
-        planner = SectionPlanner("data/sample_csvs/company_a.csv")
+        planner = SectionPlanner("data/sample_csvs/verdant_industries_2023.csv")
         plan = planner.build_plan()
         assert len(plan.raw_data) == 70
 
@@ -153,7 +153,7 @@ class TestSectionEvaluation:
 
     def test_exactly_12_sections_evaluated(self):
         """Plan should always contain exactly 12 sections."""
-        planner = SectionPlanner("data/sample_csvs/company_a.csv")
+        planner = SectionPlanner("data/sample_csvs/verdant_industries_2023.csv")
         plan = planner.build_plan()
         assert len(plan.sections) == 12
 
@@ -166,7 +166,7 @@ class TestSectionEvaluation:
 
     def test_real_company_all_sections_ready(self):
         """All 3 real company CSVs should have all 12 sections ready."""
-        for csv_file in ["company_a.csv", "company_b.csv", "company_c.csv"]:
+        for csv_file in ["verdant_industries_2023.csv", "nexcore_energy_2023.csv", "atlas_manufacturing_2023.csv"]:
             planner = SectionPlanner(f"data/sample_csvs/{csv_file}")
             plan = planner.build_plan()
             assert len(plan.ready_sections) == 12, (
@@ -195,7 +195,7 @@ class TestSectionEvaluation:
 
     def test_completeness_pct_is_100_for_full_section(self):
         """A section with all KPIs present should show 100% completeness."""
-        planner = SectionPlanner("data/sample_csvs/company_a.csv")
+        planner = SectionPlanner("data/sample_csvs/verdant_industries_2023.csv")
         plan = planner.build_plan()
         overview = plan.get_section("overview")
         assert overview.completeness_pct == 100.0
@@ -279,13 +279,13 @@ class TestSummary:
     """Tests that the summary output is correctly formatted."""
 
     def test_summary_contains_company_name(self):
-        planner = SectionPlanner("data/sample_csvs/company_a.csv")
+        planner = SectionPlanner("data/sample_csvs/verdant_industries_2023.csv")
         plan = planner.build_plan()
         summary = plan.summary()
         assert "VerdantSteel Ltd" in summary
 
     def test_summary_contains_ready_marker(self):
-        planner = SectionPlanner("data/sample_csvs/company_a.csv")
+        planner = SectionPlanner("data/sample_csvs/verdant_industries_2023.csv")
         plan = planner.build_plan()
         summary = plan.summary()
         assert "✓ READY" in summary

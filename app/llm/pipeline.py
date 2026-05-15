@@ -29,7 +29,6 @@ from app.llm.prompts import build_messages
 from app.llm.groq_client import generate_section
 
 
-# ── Result Container ──────────────────────────────────────────────────────────
 
 @dataclass
 class GeneratedReport:
@@ -69,7 +68,6 @@ class GeneratedReport:
         return "\n".join(lines)
 
 
-# ── LLM Pipeline ──────────────────────────────────────────────────────────────
 
 class LLMPipeline:
     """
@@ -108,7 +106,6 @@ class LLMPipeline:
             reporting_year=plan.reporting_year,
         )
 
-        # Mark skipped sections immediately
         report.skipped = plan.skipped_sections.copy()
 
         total = len(plan.ready_sections)
@@ -122,17 +119,14 @@ class LLMPipeline:
             print(f"  [{i}/{total}] Generating: {title}...")
 
             try:
-                # Build the prompt
                 messages = build_messages(
                     section_readiness=section_readiness,
                     company_name=plan.company_name,
                     reporting_year=plan.reporting_year,
                 )
 
-                # Call the LLM
                 text = generate_section(messages)
 
-                # Store the result
                 report.sections[section_id] = text
                 word_count = len(text.split())
                 print(f"         ✓ Done ({word_count} words)")
@@ -142,7 +136,6 @@ class LLMPipeline:
                 print(f"         ✗ Failed: {e}")
                 report.failed.append(section_id)
 
-            # Respect rate limits between calls
             if i < total:
                 time.sleep(self.delay)
 

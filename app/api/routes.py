@@ -25,7 +25,7 @@ router = APIRouter()
 @router.get("/health")
 def health_check():
     """Simple liveness check — confirms the API is running."""
-    return {"status": "ok", "service": "sustainability-report-generator"}
+    return {"status": "ok", "service": "ASPIRE"}
 
 
 @router.post("/generate")

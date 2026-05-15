@@ -27,9 +27,9 @@ from app.document.assembler import assemble_report
 CSV_DIR = Path("data/sample_csvs")
 
 COMPANY_CSVS = [
-    ("company_a.csv", "VerdantSteel Ltd",       "2023"),
-    ("company_b.csv", "NovaMind Technologies",  "2023"),
-    ("company_c.csv", "SolBridge Energy",       "2023"),
+    ("verdant_industries_2023.csv", "VerdantSteel Ltd",      "2023"),
+    ("nexcore_energy_2023.csv",     "NovaMind Technologies", "2023"),
+    ("atlas_manufacturing_2023.csv","SolBridge Energy",      "2023"),
 ]
 
 # Realistic mock text returned instead of real LLM output
@@ -155,7 +155,7 @@ class TestValidator:
         from app.core.schema import SECTION_MAP
         from app.validation.validator import validate_section
 
-        planner = SectionPlanner(CSV_DIR / "company_a.csv")
+        planner = SectionPlanner(CSV_DIR / "verdant_industries_2023.csv")
         plan = planner.build_plan()
         readiness = plan.get_section("emissions")
         section = SECTION_MAP["emissions"]
@@ -173,7 +173,7 @@ class TestValidator:
         from app.core.schema import SECTION_MAP
         from app.validation.validator import validate_section
 
-        planner = SectionPlanner(CSV_DIR / "company_a.csv")
+        planner = SectionPlanner(CSV_DIR / "verdant_industries_2023.csv")
         plan = planner.build_plan()
         readiness = plan.get_section("emissions")
         section = SECTION_MAP["emissions"]
@@ -242,7 +242,7 @@ def test_live_pipeline_company_a(tmp_path):
     Run manually with: pytest tests/integration/test_pipeline_e2e.py -m live -v
     Takes ~3 minutes.
     """
-    planner = SectionPlanner(CSV_DIR / "company_a.csv")
+    planner = SectionPlanner(CSV_DIR / "verdant_industries_2023.csv")
     plan = planner.build_plan()
 
     assert len(plan.ready_sections) == 12

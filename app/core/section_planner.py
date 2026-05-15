@@ -23,7 +23,6 @@ import pandas as pd
 from app.core.schema import REPORT_SECTIONS, ReportSection
 
 
-# ── Data Containers ───────────────────────────────────────────────────────────
 
 @dataclass
 class SectionReadiness:
@@ -45,7 +44,6 @@ class SectionPlan:
     sections: list[SectionReadiness]
     skipped_sections: list[str]         # section_ids skipped
 
-    # ── Convenience properties ────────────────────────────────────────────────
 
     @property
     def ready_sections(self) -> list[SectionReadiness]:
@@ -87,7 +85,6 @@ class SectionPlan:
         return "\n".join(lines)
 
 
-# ── Section Planner ───────────────────────────────────────────────────────────
 
 class SectionPlanner:
     """
@@ -126,7 +123,6 @@ class SectionPlanner:
             skipped_sections=skipped,
         )
 
-    # ── Private helpers ───────────────────────────────────────────────────────
 
     def _load_csv(self) -> dict[str, Any]:
         """Load CSV and return flat key-value dictionary."""
@@ -196,7 +192,6 @@ class SectionPlanner:
         )
 
 
-# ── Helper functions ──────────────────────────────────────────────────────────
 
 def _coerce(value: str) -> Any:
     """Try to cast string to int, then float, else keep as string."""

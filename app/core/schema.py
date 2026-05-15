@@ -28,7 +28,6 @@ class ReportSection:
     prompt_focus: str
 
 
-# ── Master Section Registry ────────────────────────────────────────────────────
 
 REPORT_SECTIONS: list[ReportSection] = [
 
@@ -274,14 +273,11 @@ REPORT_SECTIONS: list[ReportSection] = [
 ]
 
 
-# ── Lookup helpers ─────────────────────────────────────────────────────────────
 
-# Quick lookup by section_id
 SECTION_MAP: dict[str, ReportSection] = {
     s.section_id: s for s in REPORT_SECTIONS
 }
 
-# All KPI names across the entire schema
 ALL_KNOWN_KPIS: set[str] = set()
 for _s in REPORT_SECTIONS:
     ALL_KNOWN_KPIS.update(_s.required_kpis)

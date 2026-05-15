@@ -11,7 +11,6 @@ section's KPI data and focus instruction from the schema.
 from app.core.section_planner import SectionReadiness
 
 
-# ── System Prompt ─────────────────────────────────────────────────────────────
 
 SYSTEM_PROMPT = """You are a senior sustainability consultant and professional \
 report writer with deep expertise in GRI Standards, TCFD framework, and ESG \
@@ -38,7 +37,6 @@ separately.
 """
 
 
-# ── Unit Hints ────────────────────────────────────────────────────────────────
 # Adds context to each KPI so the LLM understands what the number means.
 
 UNIT_HINTS: dict[str, str] = {
@@ -76,7 +74,6 @@ UNIT_HINTS: dict[str, str] = {
 }
 
 
-# ── User Prompt Builder ───────────────────────────────────────────────────────
 
 def build_user_prompt(
     section_readiness: SectionReadiness,
@@ -129,7 +126,6 @@ def build_messages(
     ]
 
 
-# ── Helper ────────────────────────────────────────────────────────────────────
 
 def _format_kpis(kpi_data: dict) -> str:
     """

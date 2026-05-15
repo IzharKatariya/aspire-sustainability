@@ -20,10 +20,8 @@ from tenacity import (
     retry_if_exception_type,
 )
 
-# Load environment variables from .env file
 load_dotenv(override=True)
 
-# ── Client Initialization ─────────────────────────────────────────────────────
 
 def get_client() -> Groq:
     """
@@ -39,7 +37,6 @@ def get_client() -> Groq:
     return Groq(api_key=api_key)
 
 
-# ── API Call with Retry ───────────────────────────────────────────────────────
 
 @retry(
     stop=stop_after_attempt(3),

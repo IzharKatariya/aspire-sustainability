@@ -20,7 +20,6 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# ── CORS ───────────────────────────────────────────────────────────────────────
 # Allows Streamlit Cloud frontend to call this API
 app.add_middleware(
     CORSMiddleware,
@@ -30,7 +29,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── Routes ─────────────────────────────────────────────────────────────────────
 app.include_router(router, prefix="/api/v1")
 
 
