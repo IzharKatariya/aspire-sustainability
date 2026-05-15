@@ -39,11 +39,11 @@ REPORT_SECTIONS: list[ReportSection] = [
         required_kpis=[
             "company_name",
             "reporting_year",
-            "industry_sector",
-            "country_of_operation",
+            "industry",                  # was industry_sector
+            "country",                   # was country_of_operation
         ],
         optional_kpis=[
-            "number_of_employees",
+            "employees_total",           # was number_of_employees
             "annual_revenue_usd",
             "number_of_sites",
         ],
@@ -57,14 +57,15 @@ REPORT_SECTIONS: list[ReportSection] = [
         tcfd_pillar="Governance",
         title="Governance & Sustainability Leadership",
         required_kpis=[
-            "board_size",
-            "board_sustainability_committee",
+            "board_members_total",       # was board_size
         ],
         optional_kpis=[
-            "female_board_members_pct",
+            "board_members_female",
             "independent_directors_pct",
             "ceo_pay_ratio",
-            "sustainability_linked_exec_compensation",
+            "anti_corruption_training_pct",
+            "supplier_audits_conducted",
+            "suppliers_with_code_of_conduct_pct",
         ],
         prompt_focus="Describe the board structure, oversight mechanisms for "
                      "sustainability, and how executive accountability for ESG "
@@ -77,14 +78,14 @@ REPORT_SECTIONS: list[ReportSection] = [
         tcfd_pillar="Strategy",
         title="Climate Strategy & Risk Management",
         required_kpis=[
-            "has_climate_targets",
-            "net_zero_target_year",
+            "scope1_emissions_tco2e",    # use emissions as proxy for climate strategy
+            "reporting_year",
         ],
         optional_kpis=[
-            "physical_risk_exposure",
-            "transition_risk_exposure",
-            "climate_scenario_analysis",
-            "carbon_price_assumption_usd",
+            "scope2_emissions_tco2e",
+            "scope3_emissions_tco2e",
+            "renewable_energy_pct",
+            "energy_consumption_mwh",
         ],
         prompt_focus="Articulate the company's climate strategy, short/medium/long-term "
                      "targets, and how it identifies and manages physical and transition "
@@ -97,11 +98,11 @@ REPORT_SECTIONS: list[ReportSection] = [
         tcfd_pillar="Metrics & Targets",
         title="Energy Consumption & Efficiency",
         required_kpis=[
-            "total_energy_consumption_mwh",
-            "renewable_energy_mwh",
+            "energy_consumption_mwh",    # was total_energy_consumption_mwh
             "reporting_year",
         ],
         optional_kpis=[
+            "renewable_energy_pct",      # was renewable_energy_mwh
             "energy_intensity_per_revenue",
             "energy_reduction_vs_baseline_pct",
             "onsite_solar_mwh",
@@ -140,10 +141,10 @@ REPORT_SECTIONS: list[ReportSection] = [
         tcfd_pillar=None,
         title="Water Stewardship",
         required_kpis=[
-            "total_water_withdrawal_m3",
+            "water_withdrawal_m3",       # was total_water_withdrawal_m3
         ],
         optional_kpis=[
-            "water_recycled_m3",
+            "water_recycled_pct",        # was water_recycled_m3
             "water_intensity_per_revenue",
             "sites_in_water_stressed_areas",
             "water_reduction_target_pct",
@@ -158,12 +159,12 @@ REPORT_SECTIONS: list[ReportSection] = [
         tcfd_pillar=None,
         title="Waste Management & Circular Economy",
         required_kpis=[
-            "total_waste_tonnes",
+            "waste_total_tonnes",        # was total_waste_tonnes
         ],
         optional_kpis=[
-            "waste_recycled_tonnes",
+            "waste_recycled_pct",        # was waste_recycled_tonnes
+            "waste_hazardous_tonnes",    # was hazardous_waste_tonnes
             "waste_to_landfill_tonnes",
-            "hazardous_waste_tonnes",
             "diversion_rate_pct",
             "circular_economy_initiatives",
         ],
@@ -177,15 +178,15 @@ REPORT_SECTIONS: list[ReportSection] = [
         tcfd_pillar=None,
         title="Workforce & Human Capital",
         required_kpis=[
-            "number_of_employees",
-            "female_employees_pct",
+            "employees_total",           # was number_of_employees
+            "employees_female_pct",      # was female_employees_pct
         ],
         optional_kpis=[
-            "employee_turnover_rate_pct",
+            "employee_turnover_pct",     # was employee_turnover_rate_pct
             "new_hires",
+            "training_hours_per_employee",  # was avg_training_hours_per_employee
             "part_time_employees",
             "union_membership_pct",
-            "avg_training_hours_per_employee",
         ],
         prompt_focus="Disclose workforce composition, diversity metrics, turnover, "
                      "hiring trends, and human capital development investments.",
@@ -197,18 +198,17 @@ REPORT_SECTIONS: list[ReportSection] = [
         tcfd_pillar=None,
         title="Occupational Health & Safety",
         required_kpis=[
-            "total_recordable_injury_rate",
-            "lost_time_injury_frequency_rate",
+            "work_related_injuries",     # was total_recordable_injury_rate
         ],
         optional_kpis=[
             "fatalities",
+            "lost_time_injury_frequency_rate",
             "near_miss_incidents",
-            "safety_training_hours",
+            "training_hours_per_employee",
             "occupational_illness_rate",
         ],
-        prompt_focus="Present safety performance data including TRIR and LTIFR, "
-                     "describe the safety management system, and highlight "
-                     "improvement trends.",
+        prompt_focus="Present safety performance data, describe the safety management "
+                     "system, and highlight improvement trends.",
     ),
 
     ReportSection(
@@ -217,9 +217,11 @@ REPORT_SECTIONS: list[ReportSection] = [
         tcfd_pillar=None,
         title="Diversity, Equity & Inclusion",
         required_kpis=[
-            "female_employees_pct",
+            "employees_female_pct",      # was female_employees_pct
         ],
         optional_kpis=[
+            "employees_male_pct",
+            "board_members_female",
             "female_senior_managers_pct",
             "ethnically_diverse_employees_pct",
             "pay_gap_pct",
@@ -241,7 +243,10 @@ REPORT_SECTIONS: list[ReportSection] = [
         ],
         optional_kpis=[
             "volunteer_hours",
-            "supplier_esg_assessments_pct",
+            "suppliers_with_code_of_conduct_pct",  # was supplier_esg_assessments_pct
+            "anti_corruption_training_pct",
+            "data_breaches",
+            "supplier_audits_conducted",
             "corruption_incidents",
             "whistleblower_cases",
             "human_rights_assessments",
@@ -260,6 +265,10 @@ REPORT_SECTIONS: list[ReportSection] = [
             "reporting_year",
         ],
         optional_kpis=[
+            "renewable_energy_pct",
+            "scope1_emissions_tco2e",
+            "scope2_emissions_tco2e",
+            "scope3_emissions_tco2e",
             "net_zero_target_year",
             "renewable_energy_target_pct",
             "water_reduction_target_pct",
