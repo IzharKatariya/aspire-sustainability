@@ -20,13 +20,14 @@ HEALTH_ENDPOINT   = f"{BACKEND_URL}/api/v1/health"
 
 # ── Page setup ─────────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="Sustainability Report Generator",
-    page_icon="🌿",
+    page_title="ASPIRE | Sustainability Report Generator",
+    page_icon="🌱",
     layout="centered",
 )
 
 # ── Header ─────────────────────────────────────────────────────────────────────
-st.title("🌿 Sustainability Report Generator")
+st.title("🌱 ASPIRE")
+st.subheader("Automated Sustainability Pipeline for Integrated Reporting & Evaluation")
 st.markdown(
     "Upload your company ESG data as a CSV file and receive a "
     "**GRI/TCFD-aligned sustainability report draft** as a Word document. "
