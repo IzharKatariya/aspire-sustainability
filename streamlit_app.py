@@ -98,7 +98,7 @@ if uploaded_file is not None:
     with col1:
         st.markdown(
             "Click **Generate** to run the full AI pipeline. "
-            "This takes approximately **3–4 minutes**."
+            "This takes approximately **30–40 seconds**."
         )
     with col2:
         generate_clicked = st.button(
