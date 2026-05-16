@@ -117,8 +117,10 @@ SECTION_TONE: dict[str, str] = {
         "a water stress assessment as a next step."
     ),
     "waste": (
-        "Report total waste, recycling rate, and hazardous waste tonnage clearly. "
-        "Calculate diversion rate from available data if possible. "
+        "Report total waste, recycling rate, and hazardous waste tonnage exactly as "
+        "provided in the data. Do NOT calculate, derive, or infer any figures — for "
+        "example, do not multiply waste tonnage by recycling rate to get a recycled "
+        "weight. Only report numbers explicitly present in the KPI data. "
         "Be honest if circular economy initiatives are nascent or unquantified."
     ),
     "workforce": (
