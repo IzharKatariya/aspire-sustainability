@@ -159,7 +159,7 @@ def _build_source_pool(
         "health_safety":     {"work_related_injuries", "fatalities",
                               "training_hours_per_employee"},
         "dei":               {"employees_female_pct", "employees_male_pct",
-                              "board_members_female"},
+                              "board_members_female", "board_members_total"},
         "community_ethics":  {"community_investment_usd",
                               "suppliers_with_code_of_conduct_pct",
                               "anti_corruption_training_pct",

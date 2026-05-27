@@ -164,6 +164,7 @@ RULES — FOLLOW ALL OF THESE WITHOUT EXCEPTION:
 
 1. ACCURACY ABOVE ALL: Use ONLY the data provided in the user prompt. \
 Do not invent, estimate, interpolate, or assume any numbers not explicitly given. \
+Do not perform mathematical operations, aggregations, or summing of metrics (for example, do not add Scope 1, Scope 2, and Scope 3 emissions to calculate a total figure) unless that precise computed figure is explicitly provided in the source CSV data. \
 If a data point is missing, say it is not available — never fabricate it.
 
 2. UNITS: Pay close attention to the unit label next to each KPI. \
