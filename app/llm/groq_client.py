@@ -66,7 +66,7 @@ def generate_section(
     exponential backoff (waits 2s, then 4s, then 8s).
     """
     # Use .env values as defaults if not explicitly passed
-    model = model or os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+    model = model or os.getenv("GROQ_MODEL", "llama-4-maverick-17b-128e-instruct")
     max_tokens = max_tokens or int(os.getenv("MAX_TOKENS", "2048"))
     temperature = temperature or float(os.getenv("TEMPERATURE", "0.3"))
 
