@@ -3,9 +3,10 @@
 
 ASPIRE transforms raw corporate ESG data into audit-ready sustainability report drafts in under 60 seconds. Upload a CSV of company KPIs and receive a professionally formatted GRI/TCFD-aligned Word document — with every number automatically validated against source data.
 
-**Live:**
-- UI → https://aspire-sustainability.streamlit.app
-- API → https://aspire-sustainability.onrender.com
+> 🟢 **Live Demo:**
+> - UI (Streamlit Cloud) → https://aspire-sustainability.streamlit.app
+> - UI (AWS EC2) → http://3.110.86.184:8501
+> - API → https://aspire-sustainability.onrender.com
 
 ---
 
